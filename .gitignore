@@ -1,5 +1,6 @@
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
@@ -23,3 +24,12 @@ hs_err_pid*
 
 # Minecraft data
 /minecraft_data
+
+# Editor configs
+.history
+.settings
+.vscode
+
+# Java garbage
+.classpath
+.factorypath

@@ -8,21 +8,29 @@ import fr.leomelki.loupgarou.classes.LGCustomItems;
 import fr.leomelki.loupgarou.classes.LGGame;
 import fr.leomelki.loupgarou.classes.LGPlayer;
 
-public class REnfantSauvageLG extends Role{
+public class REnfantSauvageLG extends Role {
 	public REnfantSauvageLG(LGGame game) {
 		super(game);
 	}
+
+	@Override
+	public String getName(int amount) {
+		final String baseline = this.getName();
+
+		return (amount > 1) ? baseline.replace("nfant-", "nfants-") : baseline;
+	}
+
 	@Override
 	public String getName() {
-		for(LGPlayer lgp : getPlayers())
-			if(lgp.getPlayer() != null && lgp.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY))
+		for (LGPlayer lgp : getPlayers())
+			if (lgp.getPlayer() != null && lgp.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY))
 				return "§c§lEnfant-Sauvage";
-		return (getPlayers().size() > 0 ? "§a" : "§c")+"§lEnfant-Sauvage";
+		return (!getPlayers().isEmpty() ? "§a" : "§c") + "§lEnfant-Sauvage";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "de l'"+getName();
+		return "de l'" + getName();
 	}
 
 	@Override
@@ -42,12 +50,14 @@ public class REnfantSauvageLG extends Role{
 
 	@Override
 	public String getBroadcastedTask() {
-		return "L'"+getName()+"§9 cherche ses marques...";
+		return "L'" + getName() + "§9 cherche ses marques...";
 	}
+
 	@Override
 	public RoleType getType() {
 		return RoleType.LOUP_GAROU;
 	}
+
 	@Override
 	public RoleWinType getWinType() {
 		return RoleWinType.LOUP_GAROU;
@@ -57,31 +67,32 @@ public class REnfantSauvageLG extends Role{
 	public int getTimeout() {
 		return -1;
 	}
-	
+
 	@Override
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
 		player.setRole(this);
 		LGCustomItems.updateItem(player);
 		RLoupGarou lgRole = null;
-		for(Role role : getGame().getRoles())
-			if(role instanceof RLoupGarou)
-				lgRole = (RLoupGarou)role;
-		
-		if(lgRole == null) {
-			getGame().getRoles().add(lgRole = new RLoupGarou(getGame()));
+		for (Role role : getGame().getRoles())
+			if (role instanceof RLoupGarou)
+				lgRole = (RLoupGarou) role;
+
+		if (lgRole == null) {
+			lgRole = new RLoupGarou(getGame());
+			getGame().getRoles().add(lgRole);
 
 			getGame().getRoles().sort(new Comparator<Role>() {
 				@Override
 				public int compare(Role role1, Role role2) {
-					return role1.getTurnOrder()-role2.getTurnOrder();
+					return role1.getTurnOrder() - role2.getTurnOrder();
 				}
 			});
 		}
-		
+
 		lgRole.join(player, false);
-		for(LGPlayer lgp : lgRole.getPlayers())
-			if(lgp != player)
-				lgp.sendMessage("§7§l"+player.getName()+"§6 a rejoint les §c§lLoups-Garous§6.");
+		for (LGPlayer lgp : lgRole.getPlayers())
+			if (lgp != player)
+				lgp.sendMessage("§7§l" + player.getFullName() + "§6 a rejoint les §c§lLoups-Garous§6.");
 	}
 }

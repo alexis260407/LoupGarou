@@ -6,10 +6,10 @@ import fr.leomelki.loupgarou.classes.LGGame;
 import lombok.Getter;
 import lombok.Setter;
 
-public class LGPreDayStartEvent extends LGEvent implements Cancellable{
+public class LGPreDayStartEvent extends LGEvent implements Cancellable {
+	@Getter @Setter private boolean cancelled;
+
 	public LGPreDayStartEvent(LGGame game) {
 		super(game);
 	}
-	
-	@Getter @Setter private boolean cancelled;
 }
